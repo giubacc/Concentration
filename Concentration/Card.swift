@@ -7,3 +7,9 @@
 //
 
 import Foundation
+
+struct Card{
+    var isRevealed = false
+    var id = 0
+    var hasMatched = false
+}
