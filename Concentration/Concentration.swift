@@ -11,7 +11,7 @@ import Foundation
 class Concentration{
     var cards = [Card]()
     
-    static var cardId = 0
+    static var cardId = -1
     static func generateIndex() -> Int{
         cardId += 1
         return cardId
@@ -27,14 +27,21 @@ class Concentration{
     
     var cardRevealedIndex: Int?
     
-    func revealCard(cardIndex: Int){
+    func chooseCard(cardIndex: Int){
+        if cards[cardIndex].hasMatched {
+            return
+        }
         if cardRevealedIndex != nil, cardRevealedIndex! != cardIndex{
             if cards[cardRevealedIndex!].id == cards[cardIndex].id{
                 cards[cardRevealedIndex!].hasMatched = true
                 cards[cardIndex].hasMatched = true
             }
+            cards[cardIndex].isRevealed = true
             cardRevealedIndex = nil
         }else{
+            for index in cards.indices{
+                cards[index].isRevealed = false
+            }
             cards[cardIndex].isRevealed = true
             cardRevealedIndex = cardIndex
         }
