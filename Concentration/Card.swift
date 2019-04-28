@@ -10,6 +10,16 @@ import Foundation
 
 struct Card{
     var isRevealed = false
-    var id = 0
+    var id: Int
     var hasMatched = false
+    
+    private static var cardId = -1
+    private static func generateIndex() -> Int{
+        cardId += 1
+        return cardId
+    }
+    
+    init(){
+        id = Card.generateIndex()
+    }
 }

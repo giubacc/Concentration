@@ -9,23 +9,36 @@
 import Foundation
 
 class Concentration{
-    var cards = [Card]()
-    
-    static var cardId = -1
-    static func generateIndex() -> Int{
-        cardId += 1
-        return cardId
-    }
+    private(set) var cards = [Card]()
     
     init(howManyCards : Int){
         for _ in 0..<howManyCards{
-            cards += [Card(isRevealed: false, id: Concentration.generateIndex(), hasMatched: false)]
+            cards += [Card()]
             cards += [cards.last!]
         }
         cards.shuffle()
     }
     
-    var cardRevealedIndex: Int?
+    private var cardRevealedIndex: Int?{
+        get{
+            var revealedIndex : Int?
+            for index in cards.indices{
+                if cards[index].isRevealed{
+                    if(revealedIndex == nil){
+                        revealedIndex = index
+                    }else{
+                        return nil
+                    }
+                }
+            }
+            return revealedIndex
+        }
+        set{
+            for index in cards.indices{
+                cards[index].isRevealed = index == newValue
+            }
+        }
+    }
     
     func chooseCard(cardIndex: Int){
         if cards[cardIndex].hasMatched {
@@ -37,12 +50,7 @@ class Concentration{
                 cards[cardIndex].hasMatched = true
             }
             cards[cardIndex].isRevealed = true
-            cardRevealedIndex = nil
         }else{
-            for index in cards.indices{
-                cards[index].isRevealed = false
-            }
-            cards[cardIndex].isRevealed = true
             cardRevealedIndex = cardIndex
         }
     }

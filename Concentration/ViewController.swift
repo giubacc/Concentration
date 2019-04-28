@@ -10,10 +10,30 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    lazy var model = Concentration(howManyCards: (cardButtons.count+1)/2)
+    lazy var model = Concentration(howManyCards: cardsNo)
+    
+    var cardsNo: Int{
+        get {
+            return (cardButtons.count+1)/2
+        }
+    }
     
     @IBOutlet var cardButtons: [UIButton]!
-    var emojiChoiches = ["😆", "👻", "🤑", "💣", "💎", "🔫", "🧲", "🎲", "🏀", "🍷", "🍕", "🍐", "🌞", "🐙", "🐸", "🐱"]
+    
+    private var emojiChoiches = ["😆", "👻", "🤑", "💣", "💎", "🔫", "🧲", "🎲", "🏀", "🍷", "🍕", "🍐", "🌞", "🐙", "🐸", "🐱"]
+
+    var cardIdEmoji = [Int:String]()
+    
+    private func getEmojiForCardId(cardId: Int) -> String{
+        if let emoji = cardIdEmoji[cardId]{
+            return emoji
+        }else if emojiChoiches.count > 0{
+            cardIdEmoji[cardId] = emojiChoiches.remove(at: emojiChoiches.count.arc4random())
+            return cardIdEmoji[cardId]!
+        }else{
+            return "?"
+        }
+    }
     
     @IBAction func touchCard(_ sender: UIButton) {
         if let cardIndex = cardButtons.firstIndex(of: sender){
@@ -22,12 +42,12 @@ class ViewController: UIViewController {
         }
     }
     
-    func updateViewFromModel(){
+    private func updateViewFromModel(){
         for index in cardButtons.indices{
             let button = cardButtons[index]
             let card = model.cards[index]
             if(card.isRevealed){
-                button.setTitle(emojiChoiches[card.id], for: UIControl.State.normal)
+                button.setTitle(getEmojiForCardId(cardId: card.id), for: UIControl.State.normal)
                 button.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
             }else{
                 button.setTitle("", for: UIControl.State.normal)
@@ -36,4 +56,17 @@ class ViewController: UIViewController {
         }
     }
 }
+
+extension Int{
+    func arc4random() -> Int{
+        if self > 0{
+            return Int(arc4random_uniform(UInt32(self)))
+        }else if self < 0{
+            return Int(arc4random_uniform(UInt32(abs(self))))
+        }else{
+            return 0
+        }
+    }
+}
+
 
