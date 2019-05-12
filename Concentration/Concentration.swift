@@ -21,17 +21,10 @@ class Concentration{
     
     private var cardRevealedIndex: Int?{
         get{
-            var revealedIndex : Int?
-            for index in cards.indices{
-                if cards[index].isRevealed{
-                    if(revealedIndex == nil){
-                        revealedIndex = index
-                    }else{
-                        return nil
-                    }
-                }
+            let fcards = cards.indices.filter {
+                cards[$0].isRevealed
             }
-            return revealedIndex
+            return fcards.oneAndOnly
         }
         set{
             for index in cards.indices{
@@ -45,13 +38,21 @@ class Concentration{
             return
         }
         if cardRevealedIndex != nil, cardRevealedIndex! != cardIndex{
-            if cards[cardRevealedIndex!].id == cards[cardIndex].id{
+            if cards[cardRevealedIndex!] == cards[cardIndex]{
                 cards[cardRevealedIndex!].hasMatched = true
                 cards[cardIndex].hasMatched = true
             }
             cards[cardIndex].isRevealed = true
         }else{
             cardRevealedIndex = cardIndex
+        }
+    }
+}
+
+extension Collection{
+    var oneAndOnly: Element?{
+        get {
+            return count == 1 ? first : nil
         }
     }
 }

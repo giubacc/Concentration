@@ -20,16 +20,17 @@ class ViewController: UIViewController {
     
     @IBOutlet var cardButtons: [UIButton]!
     
-    private var emojiChoiches = ["😆", "👻", "🤑", "💣", "💎", "🔫", "🧲", "🎲", "🏀", "🍷", "🍕", "🍐", "🌞", "🐙", "🐸", "🐱"]
-
-    var cardIdEmoji = [Int:String]()
+    private var emojiChoiches = "😆👻🤑💣💎🔫🧲🎲🏀🍷🍕🍐🌞🐙🐸🐱"
     
-    private func getEmojiForCardId(cardId: Int) -> String{
-        if let emoji = cardIdEmoji[cardId]{
+    var cardEmoji = [Card:String]()
+    
+    private func getEmojiForCardId(card: Card) -> String{
+        if let emoji = cardEmoji[card]{
             return emoji
         }else if emojiChoiches.count > 0{
-            cardIdEmoji[cardId] = emojiChoiches.remove(at: emojiChoiches.count.arc4random())
-            return cardIdEmoji[cardId]!
+            let randomIndexEmoji = emojiChoiches.index(emojiChoiches.startIndex, offsetBy: emojiChoiches.count.arc4random())
+            cardEmoji[card] = String(emojiChoiches.remove(at: randomIndexEmoji))
+            return cardEmoji[card]!
         }else{
             return "?"
         }
@@ -47,7 +48,7 @@ class ViewController: UIViewController {
             let button = cardButtons[index]
             let card = model.cards[index]
             if(card.isRevealed){
-                button.setTitle(getEmojiForCardId(cardId: card.id), for: UIControl.State.normal)
+                button.setTitle(getEmojiForCardId(card: card), for: UIControl.State.normal)
                 button.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
             }else{
                 button.setTitle("", for: UIControl.State.normal)

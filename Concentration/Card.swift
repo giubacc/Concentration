@@ -8,10 +8,18 @@
 
 import Foundation
 
-struct Card{
+struct Card : Hashable{
     var isRevealed = false
-    var id: Int
+    private var id: Int
     var hasMatched = false
+    
+    static func ==(lhs: Card, rhs: Card) -> Bool{
+        return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
     
     private static var cardId = -1
     private static func generateIndex() -> Int{
